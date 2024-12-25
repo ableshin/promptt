@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단한 퀴즈 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .answers button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .answers button:hover {
+            background-color: #45a049;
+        }
+
+        .score {
+            margin-top: 20px;
+        }
+
+        .score span {
+            font-weight: bold;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .restart-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        <h1>퀴즈 게임</h1>
+        <div id="quiz">
+            <p class="question" id="question">문제를 로딩 중...</p>
+            <div class="answers" id="answers">
+                <!-- 버튼들이 여기에 동적으로 삽입됩니다 -->
+            </div>
+            <div class="score" id="score">
+                <p>정답: <span id="correct-answer">0</span> / 3</p>
+            </div>
+        </div>
+        <button class="restart-btn" id="restartBtn" style="display:none;">다시 시작</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "JavaScript의 창시자는?",
+                answers: ["브렌던 아이크", "마크 주커버그", "빌 게이츠", "스티브 잡스"],
+                correct: 0
+            },
+            {
+                question: "HTML의 의미는?",
+                answers: ["하이퍼텍스트 마크업 언어", "하이퍼 미디어 링크", "하이퍼텍스트 문서", "하이퍼 마크업"],
+                correct: 0
+            },
+            {
+                question: "CSS는 무엇의 약자?",
+                answers: ["캐스케이딩 스타일 시트", "캐시 스타일 시트", "컴퓨터 스타일 시트", "캐시 시트"],
+                correct: 0
+            },
+            {
+                question: "신혁는 무엇의 약자?",
+                answers: ["신혁", "김신혁", "빠둥이", "유애나"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById('question');
+        const answersElement = document.getElementById('answers');
+        const scoreElement = document.getElementById('correct-answer');
+        const restartBtn = document.getElementById('restartBtn');
+
+        // 퀴즈 초기화 및 질문 렌더링
+        function loadQuestion() {
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            answersElement.innerHTML = '';
+
+            // 답변 버튼 생성
+            currentQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.textContent = answer;
+                button.onclick = () => handleAnswer(index);
+                answersElement.appendChild(button);
+            });
+        }
+
+        // 정답 처리
+        function handleAnswer(selectedIndex) {
+            const currentQuestion = quizData[currentQuestionIndex];
+
+            if (selectedIndex === currentQuestion.correct) {
+                score++;
+            }
+
+            // 점수 업데이트
+            scoreElement.textContent = `${score} / 3`;
+
+            // 다음 질문으로 이동
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showEndScreen();
+            }
+        }
+
+        // 퀴즈 종료 후 결과 화면 표시
+        function showEndScreen() {
+            questionElement.textContent = `퀴즈 끝! 정답은 ${score} / 3 입니다.`;
+            answersElement.innerHTML = '';
+            restartBtn.style.display = 'inline-block';
+        }
+
+        // 다시 시작하기 버튼 클릭
+        restartBtn.onclick = () => {
+            score = 0;
+            currentQuestionIndex = 0;
+            restartBtn.style.display = 'none';
+            loadQuestion();
+            scoreElement.textContent = '0 / 3';
+        };
+
+        // 퀴즈 시작
+        loadQuestion();
+    </script>
+<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="구글 로고" />
+
+</body>
+</html>
